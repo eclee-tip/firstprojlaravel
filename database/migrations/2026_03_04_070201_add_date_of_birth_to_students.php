@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('students', function (Blueprint $table) {
             $table->date('date_of_birth')->nullable();
             $table->enum('gender',['m','f'])->default('m');
+            $table->integer('score');
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('students', function (Blueprint $table) {
             $table->dropColumn('date_of_birth');
             $table->dropColumn('gender');
+            $table->dropColumn('score');
         });
     }
 };

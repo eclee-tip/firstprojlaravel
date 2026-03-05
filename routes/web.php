@@ -53,6 +53,14 @@ Route::get('updateteacher/{id}', [TeacherController::class, 'update']);
 
 Route::get('deleteteacher/{id}', [TeacherController::class, 'delete']);
 
+Route::get('addstudent', [StudentController::class, 'addData']);
+
+Route::get('showstudents', [StudentController::class, 'getData']);
+
+Route::get('updatestudents', [StudentController::class, 'updateData']);
+
+Route::get('deletestudents', [StudentController::class, 'deleteData']);
+
 // // Sample Routing
 // Route::get('/', function () {
 //     return 'Hello';
