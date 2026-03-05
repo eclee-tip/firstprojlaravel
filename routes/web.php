@@ -12,27 +12,27 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/about', function () {
-    // $name = "Test";
-    // $email = "test@gmail.com";
+// Route::get('/about', function () {
+//     // $name = "Test";
+//     // $email = "test@gmail.com";
 
-    // Using with method
-    // return view('about')->with('name',$name)->with('email',$email);
+//     // Using with method
+//     // return view('about')->with('name',$name)->with('email',$email);
 
-    // Using compact method
-    // return view('about',compact('name','email'));
+//     // Using compact method
+//     // return view('about',compact('name','email'));
 
-    // Using array method
-    // return view('about',['name' => $name,'email' => $email]);
+//     // Using array method
+//     // return view('about',['name' => $name,'email' => $email]);
 
-    return view('about');
-});
+//     return view('about');
+// });
 
 Route::view('/contact', 'contacts');
 
 Route::controller(StudentController::class)->group(function () {
     Route::get('students', 'index');
-    Route::get('about','about');
+    Route::get('about/{name}/{id}','about');
 });
 
 Route::get('invoke', InvokeController::class);
