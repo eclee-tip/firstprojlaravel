@@ -9,8 +9,16 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $hidden = [
-        'name',
-        'age'
-    ];
+    // protected $hidden = [
+    //     'name',
+    //     'age'
+    // ];
+
+    public function scopeMale($query,$age) {
+        return $query->where('gender','m')->where('age',$age);
+    }
+
+    public function scopeFemale($query,$age) {
+        return $query->where('gender','f')->where('age',$age);
+    }
 }

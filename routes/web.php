@@ -61,6 +61,12 @@ Route::get('updatestudents', [StudentController::class, 'updateData']);
 
 Route::get('deletestudents', [StudentController::class, 'deleteData']);
 
+Route::get('wherestudents', [StudentController::class, 'whereConditions']);
+
+Route::get('queryscope', [StudentController::class, 'queryScope']);
+
+Route::get('secondquery', [StudentController::class, 'secondQuery']);
+
 // // Sample Routing
 // Route::get('/', function () {
 //     return 'Hello';
