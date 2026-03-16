@@ -22,7 +22,8 @@ class StudentFactory extends Factory
             'age' => $this->faker->numberBetween(10,25),
             'date_of_birth' => $this->faker->date('Y-m-d'),
             'gender' => $this->faker->randomElement(['m','f']),
-            'score' => $this->faker->numberBetween(0,100)
+            'score' => $this->faker->numberBetween(0,100),
+            'user_id' => $this->faker->numberBetween(1,60)
         ];
     }
 }

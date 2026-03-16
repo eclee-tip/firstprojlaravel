@@ -37,6 +37,11 @@
                 text-decoration: none;
             }
 
+            h2 {
+            color: #005bb5;
+            text-align: center;
+            }
+
             .container {
                 display: flex;
                 flex: 1;
@@ -116,7 +121,7 @@
             <aside class="sidebar">
                 <h2>Sidebar</h2>
                 <ul>
-                    <li><a href="{{ URL('/student') }}">Students</a></li>
+                    <li><a href="{{ URL('/students') }}">Students</a></li>
                     @can('teachers')
                         <li><a href="{{ URL('/teachers') }}">Teachers</a></li>
                     @endcan

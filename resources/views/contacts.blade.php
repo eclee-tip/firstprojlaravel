@@ -3,15 +3,15 @@
 @section('content')
     <div>
         <!-- This is an HTML comment -->
-        <h2>
+        <h3>
             Contacts
-        </h2>
-        <h2>
+        </h3>
+        <h3>
             Name: {{ request()->name }}
-        </h2>
-        <h2>
+        </h3>
+        <h3>
             ID: {{ request()->id }}
-        </h2>
+        </h3>
         @include('subviews.input',[
                 'myName' => request()->name
             ])

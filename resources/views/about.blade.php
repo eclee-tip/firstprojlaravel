@@ -7,7 +7,7 @@
 
 @section('content')
     <section>
-        <h2>About Us</h2>
+        <h3>About Us</h3>
         <p>This is a simple HTML and CSS template to start your project.</p>
 
         <p>Name : {{ $name }}</p>

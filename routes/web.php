@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\CacheDemoController;
 use App\Http\Controllers\InvokeController;
 use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\SessionDemoController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\StudentsMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Models\Teacher;
 use Termwind\Components\Raw;
@@ -67,6 +71,21 @@ Route::get('queryscope', [StudentController::class, 'queryScope']);
 
 Route::get('secondquery', [StudentController::class, 'secondQuery']);
 
+Route::prefix('studentsinfo')->controller(StudentController::class)->group(function () {
+    Route::get('/','index');
+    Route::view('add','students.add');
+    Route::post('create','create');
+    Route::get('edit/{id}','edit');
+    Route::post('update/{id}','update');
+    Route::delete('delete/{id}','destroy');
+});
+
+Route::get('users', [UserController::class, 'index']);
+
+Route::get('session', [SessionDemoController::class, 'index'])->name('session.demo');
+
+Route::get('cache', [CacheDemoController::class, 'index'])->name('cache.demo');
+
 // // Sample Routing
 // Route::get('/', function () {
 //     return 'Hello';
@@ -96,3 +115,7 @@ Route::get('secondquery', [StudentController::class, 'secondQuery']);
 // Route::fallback(function () {
 //     return 'Page not found';
 // });
+
+Auth::routes();
+
+Route::get('/home',[App\Http\Controllers\HomeController::class, 'index'])->name('home');

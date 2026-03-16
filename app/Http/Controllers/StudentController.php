@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentAddRequest;
+use App\Models\Images;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -17,8 +20,108 @@ class StudentController extends Controller
         $this->age = 20;
     }
 
-    public function index() {
-        return 'Hello from controller';
+    // Eloquent CRUD
+    public function index(Request $request) {
+        // $students = Student::all();
+        $students = Student::with('images')
+        ->when($request->search, function ($query) use ($request) {
+            return $query->whereAny([
+                'name',
+                'age',
+                'email',
+                'date_of_birth',
+                'score',
+                'gender'
+            ], 'like','%' . $request->search .'%');
+        })->paginate(10);
+        return view('students.index',compact('students'));
+    }
+
+    // Eloquent CRUD
+    public function create(StudentAddRequest $request) {
+
+        $imagePath = null;
+        if($request->hasFile('image')){
+            $imagePath=$request->file('image')->store('photos','public');
+        }
+
+        $student = new Student();
+        $student->user_id = 2;
+        $student->name = $request->name;
+        $student->email = $request->email;
+        $student->age = $request->age;
+        $student->date_of_birth = $request->date_of_birth;
+        $student->gender = $request->gender;
+        $student->score = $request->score;
+        // $student->image = $imagePath;
+        $student->save();
+
+        if($request->hasFile('image')){
+            $images = new Images();
+            $images->path = $imagePath;
+            $images->imageable_id = $student->id;
+            $images->imageable_type = Student::class;
+            $images->save();
+        }
+        
+        session()->flash('success','Student created successfully');
+        return redirect('studentsinfo');
+    }
+
+    // Eloquent CRUD
+    public function edit(Request $request, $id) {
+        $student = Student::findOrFail($id);
+
+        // Gate::authorize('edit-student', $student);
+        return view('students.edit', compact('student'));
+    }
+
+    // Eloquent CRUD
+    public function update(Request $request, $id) {
+
+        $imagePath = null;
+        if($request->hasFile('image')){
+            $imagePath=$request->file('image')->store('photos','public');
+        }
+
+        $student = Student::findOrFail($id);
+        // Gate::authorize('edit-student', $student);
+        $student->name = $request->name;
+        $student->email = $request->email;
+        $student->age = $request->age;
+        $student->date_of_birth = $request->date_of_birth;
+        $student->gender = $request->gender;
+        $student->score = $request->score;
+        // $student->image = $imagePath;
+
+        $student->update();
+
+        if($request->hasFile('image')) {
+            $images = new Images();
+            $images->path = $imagePath;
+            $images->imageable_id = $student->id;
+            $images->imageable_type = Student::class;
+            $images->update();
+        }
+        
+        session()->flash('success','Student updated successfully');
+
+        return redirect('studentsinfo');
+    }
+
+    // Eloquent CRUD
+    public function destroy(Request $request, $id) {
+        $student = Student::findOrFail($id);
+
+        if($student->image) {
+            Storage::disk('public')->delete($student->image);
+        }
+
+        $student->delete();
+
+        session()->flash('success','Student deleted successfully');
+
+        return redirect('studentsinfo');
     }
 
     public function about($name,$id) {
@@ -73,8 +176,13 @@ class StudentController extends Controller
 
     public function getData() {
 
-        // $items = Student::all();
-        $items = Student::find(55);
+        $items = Student::all();
+
+        // $items = Student::onlyTrashed()->get();
+
+        // $items = Student::withTrashed()->get();
+
+        // $items = Student::withTrashed()->find(2)->restore();
 
         // Query Builder
         // $items = DB::table('students')
@@ -104,8 +212,11 @@ class StudentController extends Controller
 
     public function deleteData() {
 
-        $items = Student::findOrFail(57);
-        $items->delete();
+        // $items = Student::findOrFail(2);
+        // $items->delete();
+
+        $items = Student::find(1);
+        $items->forceDelete();
 
         // Query Builder
         // DB::table('students')
@@ -127,9 +238,9 @@ class StudentController extends Controller
         //     })
         //     ->get();
 
-        // $items = Student::whereBetween('age',[18,25])-get();
+        // $items = Student::whereBetween('age',[18,25])->get();
 
-        // $items = Student::whereNotBetween('age',[18,25])-get();
+        // $items = Student::whereNotBetween('age',[18,25])->get();
 
         // $items = Student::whereNotIn('id',[1,2,3,4,5])->get();
 
@@ -139,15 +250,15 @@ class StudentController extends Controller
 
         // $items = Student::whereAny(['age','score'],'=',25)->get();
 
-        // $items = Student::where('age',25)->where('score',25)->where('id',25)->get();
+        // $items = Student::where('age',25)->where('score',89)->where('id',11)->get();
 
-        // $items = Student::whereAll(['age','score','id'], 25)->get();
+          $items = Student::whereAll(['age','score','id'], 25)->get();
 
         return $items;
     }
 
     public function queryScope() {
-        $items = Student::female(35)
+        $items = Student::female(20)
         ->get();
 
         return $items;
